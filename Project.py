@@ -229,14 +229,12 @@ class AprioriGUI:
         self.table.heading("Lift", text="Lift")
         self.table.column("Itemset/Rule", width=400)
 
-        # Insert frequent itemsets
         for lvl, itemsets in frequent_itemsets.items():
             for itemset in itemsets:
                 rule_str = ",".join(itemset)
                 lift_val = lift_dict.get(rule_str, "")  # Lift for single itemsets may be empty
                 self.table.insert("", "end", values=("Frequent Itemset", rule_str, itemset_support_count[tuple(itemset)], lift_val))
 
-        # Insert association rules
         for rule in strong_rules:
             lift_val = lift_dict.get(rule, "")
             self.table.insert("", "end", values=("Association Rule", rule, confidence_dict[rule], lift_val))
