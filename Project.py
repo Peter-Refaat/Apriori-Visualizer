@@ -29,14 +29,14 @@ def run_apriori(file_path, min_support_percent, min_confidence_percent):
         items = transaction.split(',')
         cur_dict = defaultdict(int)
         for item in items:
-            cur_dict[item] = 1
+            cur_dict[item.strip()] = 1
         for item in cur_dict:
-            itemset_support_count[tuple(item)] += 1
+            itemset_support_count[tuple([item])] += 1
 
     def is_frequent(check_itemset):
         cnt = 0
         for itemset in dt.iloc[:, 1]:
-            items = itemset.split(',')
+            items = {item.strip() for item in itemset.split(',')}
             can = True
             for item in check_itemset:
                 if item not in items:
@@ -80,17 +80,18 @@ def run_apriori(file_path, min_support_percent, min_confidence_percent):
                         break
             cur = nxt_cur
             lvl += 1
-        frequent, sup_count = is_frequent(cur[0])
-        if(frequent):
-            itemset_support_count[tuple(cur[0])] = sup_count
-            frequent_itemsets[lvl].append(cur[0])
+        if len(cur) == 1:
+            frequent, sup_count = is_frequent(cur[0])
+            if(frequent):
+                itemset_support_count[tuple(cur[0])] = sup_count
+                frequent_itemsets[lvl].append(cur[0])
         return frequent_itemsets
 
     def get_confidence(before,after):
         before_frequent, before_count = is_frequent(before)
         combined = before + after
         combined_frequent, combined_count = is_frequent(combined)
-        return combined_count / before_count
+        return combined_count / before_count if before_count > 0 else 0
 
     def generate_association_rules(itemset):
         n = len(itemset)
@@ -128,7 +129,7 @@ def run_apriori(file_path, min_support_percent, min_confidence_percent):
 
     return frequent_itemsets, itemset_support_count, strong_association_rules, confidence, lift
 
-class AprioriGUI:
+class GUI:
     def __init__(self, root):
         self.root = root
         root.title("Apriori Algorithm GUI")
@@ -240,5 +241,5 @@ class AprioriGUI:
             self.table.insert("", "end", values=("Association Rule", rule, confidence_dict[rule], lift_val))
 
 root = tk.Tk()
-app = AprioriGUI(root)
+app = GUI(root)
 root.mainloop()
