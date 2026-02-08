@@ -129,7 +129,7 @@ The **Apriori algorithm** identifies frequent itemsets in a dataset based on a m
 ## 🧑‍💻 Author
 
 **Peter Refaat**  
-💬 Developed in Python with ❤️ to simplify association rule mining visualization.
+💬 Developed in Python to simplify association rule mining visualization.
 
 ---
 
